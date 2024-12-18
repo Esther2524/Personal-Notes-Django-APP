@@ -212,3 +212,34 @@ This file is focused on the **routes specific** to functionalities provided by t
   * **List and Create Notes**: The route `path("notes/", views.NoteListCreate.as_view(), name="note-list")` handles listing all notes for a user and creating new notes. 
   * **Delete Notes**: The route `path("notes/delete/<int:pk>", views.NoteDelete.as_view(), name="delete-note")` is set up for deleting a specific note, identified by its primary key (`pk`). Using `int:pk` ensures that the URL captures an integer, which Django automatically uses to fetch the correct note instance for deletion.
 
+
+13. Access and use the Django admin panel
+    * Create a Superuser `python manage.py createsuperuser`
+      ```
+      Name: Admin
+      email: admin@gmail.com
+      Password: 123456aA*
+      ```
+    * Run the Django Server: `python manage.py runserver`
+    * Access the Admin Panel: `http://127.0.0.1:8000/admin/`. Use the superuser credentials we created earlier to log in to the admin panel. 
+
+14. Test Endpoints using Postman
+    * Test endpoint `http://127.0.0.1:8000/api/notes/`. Set the method to `GET` since we're fetching data. JWT ensures that users can only access their own data.
+    * To authenticate the request using your JWT (JSON Web Token) on Postman dashboard: **"Authorization"** -> **"Bearer Token"** -> Paste the access token into the **"Token"** field.
+    * Btw, get the access token by visiting the `http://127.0.0.1:8000/api/token/` and enter the specific user's credentials.
+    * Postman will execute the request to the Django server, passing along the JWT in the Authorization header as a Bearer token.
+  
+
+## Front-end
+1. Create the React APP with Tailwind CSS (we don't have front-end folder at this moment)
+   ```
+   npx create-react-app frontend
+   cd frontend
+   npm install -D tailwindcss
+   npx tailwindcss init
+   ```
+2. Install some necessary packages
+    ```
+    cd frontend
+    npm install axios react-router-dom jwt-decode
+    ```
