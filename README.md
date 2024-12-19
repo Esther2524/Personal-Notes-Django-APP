@@ -229,6 +229,34 @@ This file is focused on the **routes specific** to functionalities provided by t
     * Btw, get the access token by visiting the `http://127.0.0.1:8000/api/token/` and enter the specific user's credentials.
     * Postman will execute the request to the Django server, passing along the JWT in the Authorization header as a Bearer token.
   
+15. Change a database setup (for delopyment or just using a different database). We need to modify the code in `backend/backend/settings.py` below
+    ```
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+    ```
+    to
+    ```
+    DATABASES = {
+        'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'wangzhixiao',
+        'USER': 'wangzhixiao',
+        'PASSWORD': '',
+        'HOST': 'localhost',  
+        'PORT': '',
+        }
+    }   
+    ```
+    Refer to the official website [How to connect to a PostgreSQL server with Python](https://postgresapp.com/). The database's name is `wangzhixiao` and the username is `wangzhixiao`. no need to set up the password and port.
+    * On the terminal, use `psql -U wangzhixiao -d wangzhixiao` to check the database.
+    * Use `\dt` to list all the tables.
+    * View the content of a specific table: `SELECT * FROM api_note;`
+    * Exit: `\q`
+I found When we switch your Django project from one database system (like the default SQLite) to another (like PostgreSQL), the data stored in the original database does **NOT** automatically transfer to the new one. So I need to create a new superuser (admin) and test them again.
 
 ## Front-end
 1. Create the React APP with Tailwind CSS (we don't have front-end folder at this moment)
@@ -238,8 +266,10 @@ This file is focused on the **routes specific** to functionalities provided by t
    npm install -D tailwindcss
    npx tailwindcss init
    ```
+   And follow the instructions on [Tailwind CSS](https://tailwindcss.com/docs/guides/create-react-app): delete the original `App.css`, modify the `index.css` and `tailwind.config.js`.
 2. Install some necessary packages
     ```
     cd frontend
     npm install axios react-router-dom jwt-decode
     ```
+3. Create some directories and files
