@@ -1,9 +1,47 @@
+import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import NotFound from './pages/NotFound';
+import Register from './pages/Register';
+import ProtectedRoute from './components/ProtectedRoute';
+
+function Logout() {
+  localStorage.clear()
+  return <Navigate to='/login' />
+}
+
+function RegisterAndLogout() {
+  localStorage.clear()
+  return <Register />
+}
+
+// navigate between different components
 function App() {
   return (
-    <div className="bg-cyan-300 flex">
-      <p>hello, world</p>
- 
-    </div>
+    <BrowserRouter>
+      <Routes>
+        
+        <Route
+          path='/'
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route path='/login' element={<Login />} />
+
+        <Route path='/logout' element={<Logout />} />
+
+        <Route path='/register' element={<Register />} />
+
+        <Route path='*' element={<NotFound />} />
+      </Routes>
+
+
+    </BrowserRouter>
   );
 }
 
