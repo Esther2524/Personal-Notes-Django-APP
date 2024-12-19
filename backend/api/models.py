@@ -5,8 +5,12 @@ from django.contrib.auth.models import User
 
 # (models.Model) is the inheritance that makes Node model a Django model 
 class Note(models.Model):
+    '''
+    the Django model model must have fields that correspond to the keys in the JSON object that sent from the front-end
+    '''
     title = models.CharField(max_length=100) # the title can be up to 100 characters long
     content = models.TextField() # larger blocks of text that don't have a specific length limit
+    
     created_at = models.DateTimeField(auto_now_add=True) # automatically set the field to the date and time when a note is first created
     
     # `author` field establishes a foreign key relationship to the Django built-in User model.
