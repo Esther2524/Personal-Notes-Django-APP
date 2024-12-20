@@ -11,7 +11,9 @@ class Note(models.Model):
     title = models.CharField(max_length=100) # the title can be up to 100 characters long
     content = models.TextField() # larger blocks of text that don't have a specific length limit
     
-    created_at = models.DateTimeField(auto_now_add=True) # automatically set the field to the date and time when a note is first created
+    # created_at = models.DateTimeField(auto_now_add=True)  # automatically set the field to the date and time when a note is first created
+    last_modified = models.DateTimeField(auto_now=True)  # Automatically set the field to the current date and time when a note is saved
+
     
     # `author` field establishes a foreign key relationship to the Django built-in User model.
     # `models.CASCADE means that when a user is deleted, all of their associated notes should also be deleted. 

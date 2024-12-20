@@ -18,7 +18,7 @@ class UserSerializer(serializers.ModelSerializer):
 class NoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Note # tell the serializer which model (in this case, model Note) it should serialize/deserialize.
-        fields = ["id", "title", "content", "created_at", "author"]
+        fields = ["id", "title", "content", "last_modified", "author"]
         # `author` can be included in serialization outputs, but it cannot be set directly via the serializer during create or update operations through the API
         # because the `author` (actually the user) is automatically set based on the logged-in user
         extra_kwargs = {"author": {"read_only": True}}
