@@ -1,275 +1,98 @@
-# Django-APP
+# Personal Notes Application
 
-## Login/SignUp Feature
+## Built With
+* **Django** - The web framework used for the backend.
+* **Django REST Framework** - The framework used for creating APIs.
+* **React** - The web library used for the frontend.
+* **Databases**:
+    * **SQLite** - Used during development for its simplicity and ease of configuration.
+    * **PostgreSQL** - Recommended for production due to its robustness, scalability, and support for advanced features.
 
-### Backend - API
-1. Create two folders: `backend` and `frontend`
-2. In the `backend` folder
-   1. create and activate the virtual environment to store our various Python packages `python3 -m venv my-env`, `source my-env/bin/activate`
-   2. Create `requirements.txt` file
-   3. Run `pip install -r requirements.txt` to install all necessary packages
-3. First `cd backend`, then create a Django project: `django-admin startproject backend .`
-   Note the structure looks like (yes we do have a nested `backend` folder):
-    ```
-    - backend
-        - backend # this is the Django Project
-            - settings.py # Set (or install) Django applications, plugins, middleware, database engines
-            - urls.py # Configure different url routes that we can route or direct to different Django apps
-            - asgi.py # Special configuration that allows Django to communicate with the web server
-            - wsgi.py # Same as above
-        - manage.py # Act as a command line tool, allowing us to run special commands like making database migrations, running  
-                      the Python server, and etc.
-        - my-env # Python virtual environment
-        - requirements.txt
-    ```
-4. Create a Django APP `python3 manage.py startapp api`. In this case, I will just create a single app called `api`. Now the directory struture will be like:
-   ```
-   - backend
-        - backend # this is the Django Project
-            - settings.py
-            - urls.py
-            - asgi.py
-            - wsgi.py
-        - manage.py
-        - api # Django (standalone) app
-            - admin.py # Register your Django models with Django’s admin interface.
-            - apps.py # Configure some of the application-specific settings.
-            - models.py # Define the data models (the database schema) for the app. Each class in this file represents a database table, and each attribute of the class represents a column in the database table.
-            - views.py # Contain the logic and control flow for handling requests from users.
-            - tests.py
-            - migrations/ # Contain migrations files for the app
-        - my-env # Python virtual environment
-        - requirements.txt
-   ```
-5. Modify `settings.py` file after running those two command above:
-   1. The first part we need to modify is:
-      ```
-        # Django Settings
-        from datetime import timedelta
-        from dotenv import load_dotenv
-        import os
-        load_dotenv() # load a environment variable for database credentials or other things 
-      ```
-    2. Scroll down, the second part we need to modify is:
-       ```
-        # Allow any different hosts for now
-        ALLOWED_HOSTS = ["*"]
-        # Configuire Django's REST framework and JWT (JSON Web Token) authentication settings.
-        REST_FRAMEWORK = {
-            "DEFAULT_AUTHENTICATION_CLASSES": (
-                "rest_framework_simplejwt.authentication.JWTAuthentication",
-            ),
-            "DEFAULT_PERMISSION_CLASSES": [
-                "rest_framework.permissions.IsAuthenticated",
-            ],
-        }
+## Getting Started
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
-        SIMPLE_JWT = {
-            "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
-            "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
-        }
-       ```
-       Implementing JWT authentication in this manner enhances the security of a Django REST framework application by ensuring that:
-        * Only authenticated users can access the API.
-        * Authentication tokens (JWTs) have a limited lifespan, which helps limit the damage potential if a token is compromised.
-        * Users can remain authenticated over longer periods without compromising security through the use of refresh tokens.
-    3. Continue scrolling down:
-        ```
-        NSTALLED_APPS = {
-            ...
-            "api", # this is the name of the Django app. Add this after you run `python3 manage.py startapp api`!!
-            "rest_framework",
-            "corsheaders",
-        }
-        MIDDLEWARE = {
-            ...
-            "corsheaders.middleware.CorsMiddleware",
-        }
-        ```
-    4. At the bottom, add:
-        ```
-        CORS_ALLOW_ALL_ORIGINS = True
-        CORS_ALLOWS_CREDENTIALS = True
-        ```
-* How JWT Works
-Json Web Token (JWT) acts as the permissions or authentication everytime we access a website. The front-end will store the **access token** and **refresh token** that generated by the backe-end.
+### Prerequisites
+What things you need to install the software and how to install them:
+- Python 3.8+
+- pip
+- Node.js
+- npm or yarn
 
-
-6. Create `serializers.py` file: 
-    Serializer can take a **Python object** and **convert it into JSON data** that can be used in the communication with other applications.
-    ```
-    - backend
-        - backend # this is the Django Project
-            - settings.py
-            - urls.py
-            - asgi.py
-            - wsgi.py
-        - manage.py
-        - api # Django (standalone) app
-            - admin.py
-            - apps.py 
-            - models.py # Define the database schema
-            - views.py # Contain the logic and control flow for handling requests from users.
-            - serializers.py # Handle API requests and responses
-            - tests.py
-            - migrations/ # Contain migrations files for the app
-        - my-env # Python virtual environment
-        - requirements.txt
-    ```
-   * Define a Model: First, you define your models in `models.py` (or use Django's built-in `User` model).
-   * Create a Serializer: You create a corresponding serializer in `serializers.py` for that model.
-   * Use in Views: In `views.py`, you use the serializer to handle incoming JSON requests. The serializer parses and validates the JSON against the model, and it can also serialize model instances to JSON responses.
-
-7. Modify `backend/api/views.py` file.
-   A view is a Python function or class that takes a web request (GET, POST, PUT, DELETE) and returns a web response (JSON data).Views handle the "what happens" when a request is made to a specific URL (endpoint).
-8. Modify `backend/backend/urls.py` file.
-   URLs here are **endpoints**. We will map each URL to a view. It means, when a specific URL is accessed, Django executes the associated view function or class method to handle the request.
-
-### Summary
-**Step 1: Define Data Models and Serializers**
-* **Models**: In `models.py`, you define the data schemas (models) that Django will use to create database tables.
-* **Serializers**: In `serializers.py`, you define serializers that control how instances of these models are converted to and from JSON. This includes setting which fields are included in the API output, input validation, and potentially complex data transformations.
-
-**Step 2: Create Views**
-* **Views**: In `views.py`, you define the logic and behaviors that happen when specific endpoints are accessed. These views will use your serializers to **process incoming data** (on POST requests) and **format outgoing data** (on GET requests).
+### Backend Setup
+Navigate to the backend directory:
 ```
-# Retrieve a Note instance from the database
-note_instance = Note.objects.get(id=1)
-
-# Create an instance of NoteSerializer with the retrieved note (`NoteSerializer` is from the `serializer.py` file). We don't need to return anything for classed in `serializers.py` because we can just create a serializer object when we want to access the formated data in `views.py`.
-serializer = NoteSerializer(note_instance)
-
-# Access the serialized data (This step usually happens in the `views.py`)
-serialized_data = serializer.data
-# `serialized_data` is now a Python dictionary that can be easily rendered into JSON
+cd backend
 ```
-**Step 3: Configure URL Patterns**
+Create and activate a virtual environment:
 ```
-- backend
-    - backend # this is the Django Project
-        - settings.py
-        - urls.py # Entry point for all URL routings
-        - asgi.py
-        - wsgi.py
-    - manage.py
-    - api # Django (standalone) app
-        - admin.py
-        - apps.py 
-        - models.py # Define the database schema
-        - serializers.py # Handle API requests and responses
-        - views.py # Contain the logic and control flow for handling requests from users.
-        - urls.py # Modular URL Configuration
-        - tests.py
-        - migrations/ # Contain migrations files for the app
-    - my-env # Python virtual environment
-    - requirements.txt
+python -m venv venv
+source venv/bin/activate
 ```
-* **URL Configuration**: In `backend/urls`.py, you **map URLs (endpoints) to views**. This file tells Django what to do when a specific endpoint is accessed. Each path corresponds to a view that will handle requests to that endpoint.
-* **Modular URL Configuration**: We usually split URL configurations into separate files (`api/urls.py` and `backend/urls.py`). Each app handles its own routing logic.
-
-
-9. Create migrations: `python3 manage.py makemigrations` and then Apply the migrations: `python3 manage.py migrate`
-   * Everytime when we make changes to `models.py`, we need to create migrations (using `python3 manage.py makemigrations`) and then apply them (using `python3 manage.py migrate`) to update the database schema.
-
-10.  Run the server: `python3 manage.py runserver`
-
-11.  Go to the url `http://127.0.0.1:8000/api/users/register`, we can create a new user on the dashboard. Next, go to `http://127.0.0.1:8000/api/token/`, and we enter the credentials, and it will return:
+Install the required packages:
 ```
-{
-    "refresh": "...",
-    "access": "..."
+pip install -r requirements.txt
+```
+Migrate the database:
+```
+python manage.py makemigrations
+python manage.py migrate
+```
+Start the Django development server:
+```
+python manage.py runserver
+```
+### Frontend Setup
+Navigate to the frontend directory:
+```
+cd frontend
+```
+Environment Configuration: you need to set up an environment file. Create a `.env` file in the `frontend` directory and add the following line:
+```
+REACT_APP_BASE_API_URL="http://127.0.0.1:8000"
+```
+
+Install the necessary npm packages:
+```
+npm install
+```
+Start the React development server:
+```
+npm start
+```
+### Database Setup
+If you use the default SQLite database, you don't need to change the default settings. If you want to switch to the PostgreSQL database, modify the code in `settings.py`:
+
+```
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'your_database_name',
+        'USER': 'your_database_user',
+        'PASSWORD': 'your_database_password',
+        'HOST': 'localhost',
+        'PORT': '', 
+    }
 }
 ```
-This access token is what the front-end will **store** and **use** with every request it sends. 
-
-12.  Create some custome models like `Note` in `models.py`. Then modify `serializers.py` by adding a new class like `NodeSerializer`. Do not forget to make and apply migrations after doing this, since changing models means changes database schemas.
-
-### Serialization Process & Deserialization Process
-1. In the **serialization** process, a serializer takes a Django model instance and turns it into a datatype (like a Python dictionary) that can easily be converted to JSON. This serialized data can then be sent to clients (like web browsers or mobile apps).
-    ```
-    note_instance = Note.objects.get(id=1)  # Django model instance from the database
-    serializer = NoteSerializer(note_instance)  # Serializing the instance
-    return JsonResponse(serializer.data)  # Sending JSON response to the client
-    ```
-2. In the **deserialization** process, a serializer takes incoming data (like JSON from an HTTP request), validates it against the model definition, and then creates or updates **model instances** if the data is valid.
-    ```
-    serializer = NoteSerializer(data=request.data)  # Deserialize incoming JSON to model fields
-    if serializer.is_valid():
-        note_instance = serializer.save()  # Save the model instance to the database
-    ```
-    `serializer.save()` either creates a new instance or updates an existing one based on the validated data. In the database, what we store are **model objects**. 
-
-### `backend/urls.py` and `api/urls.py`
-* Breakdown of `backend/urls.py`
-This file acts as the **entry point for all URL routings**.
-  * Routes for Admin Route, JWT Authentication, API Authentication
-  * User Registration
-  * Including `api.urls`: It sets a base path for all the URLs defined in `api/urls.py`. Actually, Wwhen you include a set of URLs from another file `api/urls.py`, Django effectively **forwards** any requests that match the specified path prefix to the included URL configuration.
-    * For a URL like `/api/notes/`, the `NoteListCreate` view is invoked.
-    * For a URL like `/api/notes/delete/123/`, the NoteDelete view handles the request.
-* Breakdown of `api/urls.py`
-This file is focused on the **routes specific** to functionalities provided by the **`api` app**, such as managing notes. We can think of this as a form of **URL forwarding**.
-  * **List and Create Notes**: The route `path("notes/", views.NoteListCreate.as_view(), name="note-list")` handles listing all notes for a user and creating new notes. 
-  * **Delete Notes**: The route `path("notes/delete/<int:pk>", views.NoteDelete.as_view(), name="delete-note")` is set up for deleting a specific note, identified by its primary key (`pk`). Using `int:pk` ensures that the URL captures an integer, which Django automatically uses to fetch the correct note instance for deletion.
 
 
-13. Access and use the Django admin panel
-    * Create a Superuser `python manage.py createsuperuser`
-      ```
-      Name: Admin
-      email: admin@gmail.com
-      Password: 123456aA*
-      ```
-    * Run the Django Server: `python manage.py runserver`
-    * Access the Admin Panel: `http://127.0.0.1:8000/admin/`. Use the superuser credentials we created earlier to log in to the admin panel. 
+## Project Details
+### API Endpoints
+* **User Authentication**
+  * POST `/api/token/`: Retrieve the JWT authentication token using username and password.
+  * POST `/api/token/refresh/`: Retrieve a new access token using a refresh token.
+* **Notes CRUD**
+  * GET `/api/notes/`: List all notes for the authenticated user.
+  * POST `/api/notes/`: Create a new note.
+  * GET `/api/notes/{id}/`: Retrieve a specific note.
+  * PUT `/api/notes/{id}/`: Update a specific note.
+  * DELETE `/api/notes/{id}/`: Delete a specific note.
 
-14. Test Endpoints using Postman
-    * Test endpoint `http://127.0.0.1:8000/api/notes/`. Set the method to `GET` since we're fetching data. JWT ensures that users can only access their own data.
-    * To authenticate the request using your JWT (JSON Web Token) on Postman dashboard: **"Authorization"** -> **"Bearer Token"** -> Paste the access token into the **"Token"** field.
-    * Btw, get the access token by visiting the `http://127.0.0.1:8000/api/token/` and enter the specific user's credentials.
-    * Postman will execute the request to the Django server, passing along the JWT in the Authorization header as a Bearer token.
-  
-15. Change a database setup (for delopyment or just using a different database). We need to modify the code in `backend/backend/settings.py` below
-    ```
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
-    ```
-    to
-    ```
-    DATABASES = {
-        'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'wangzhixiao',
-        'USER': 'wangzhixiao',
-        'PASSWORD': '',
-        'HOST': 'localhost',  
-        'PORT': '',
-        }
-    }   
-    ```
-    Refer to the official website [How to connect to a PostgreSQL server with Python](https://postgresapp.com/). The database's name is `wangzhixiao` and the username is `wangzhixiao`. no need to set up the password and port.
-    * On the terminal, use `psql -U wangzhixiao -d wangzhixiao` to check the database.
-    * Use `\dt` to list all the tables.
-    * View the content of a specific table: `SELECT * FROM api_note;`
-    * Exit: `\q`
-I found When we switch your Django project from one database system (like the default SQLite) to another (like PostgreSQL), the data stored in the original database does **NOT** automatically transfer to the new one. So I need to create a new superuser (admin) and test them again.
+### Features
+This application offers a variety of features to enhance user interaction and data management:
+- **Display Notes**: Users can view a list of all their notes along with their titles, content and the timestamps of their last modifications.
+- **Add New Notes**: Provides a form to create new notes, which are immediately available in the list after creation.
+- **Edit Existing Notes**: Users can select any note to edit its content or title, with changes reflected immediately.
+- **Delete Notes**: Notes can be deleted with an additional confirmation step to prevent accidental deletions.
 
-## Front-end
-1. Create the React APP with Tailwind CSS (we don't have front-end folder at this moment)
-   ```
-   npx create-react-app frontend
-   cd frontend
-   npm install -D tailwindcss
-   npx tailwindcss init
-   ```
-   And follow the instructions on [Tailwind CSS](https://tailwindcss.com/docs/guides/create-react-app): delete the original `App.css`, modify the `index.css` and `tailwind.config.js`.
-2. Install some necessary packages
-    ```
-    cd frontend
-    npm install axios react-router-dom jwt-decode
-    ```
-3. Create some directories and files
+These features are designed to provide a seamless note-taking experience, ensuring data is easy to manage and always accessible.
